@@ -6,16 +6,32 @@ logging:
     org.springframework: DEBUG
 
 spring:
+#  h2:
+#    console:
+#      enabled: true
+  jpa:
+    defer-datasource-initialization: true
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    generate-ddl: true
+    database: mysql
   messages:
     basename: messages
-  security:
-    user:
-      name: username
-      password: passw0rd
+#  security:
+#    user:
+#      name: username
+#      password: passw0rd
+  datasource:
+    url: jdbc:mysql://localhost:3306/wonderful?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    username: root
+    password: duddn1125
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+
 
