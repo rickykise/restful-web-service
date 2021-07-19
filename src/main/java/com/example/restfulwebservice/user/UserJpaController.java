@@ -45,6 +45,28 @@ public class UserJpaController {
        return model;
     }
 
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody User user) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (!optionalUser.isPresent()) {
+            throw new UserNotFoundException(String.format("ID[%s} not found", id));
+        }
+
+        User storedUser = optionalUser.get();
+        storedUser.setName(user.getName());
+        storedUser.setPassword(user.getPassword());
+
+        User updateUser = userRepository.save(storedUser);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/id}")
+                .buildAndExpand(updateUser.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
+    }
+
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable int id) {
         userRepository.deleteById(id);
@@ -90,5 +112,16 @@ public class UserJpaController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @DeleteMapping("/users/{id}/posts/{postId}")
+    public void deletePost(@PathVariable int id, @PathVariable int postId) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (!user.isPresent()) {
+            throw  new UserNotFoundException(String.format("ID[%s] not found", id));
+        }else {
+            postRepository.deleteById(postId);
+        }
     }
 }
